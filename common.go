@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	OnlineSession int64
-	GlobalUid     uint64 = 1
+	OnlineSession int64      //在线用户数
+	GlobalUid     uint64 = 1 //自增ID
 	AppConfig            = Config{}
 )
 
