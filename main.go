@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"net"
 	"os"
 	"os/signal"
@@ -25,12 +25,12 @@ func Start(addr string) {
 	if err != nil {
 		panic(err)
 	}
-	log.Println("server start...")
+	log.Info("server start...")
 	ctx, _ := context.WithCancel(context.Background())
 	go func() {
 		<-quit
 		close(quit)
-		log.Println("server stop...")
+		log.Info("server stop...")
 		ctx.Done()     //控制Handle 不再接受新的请求
 		process.Wait() //等待所有已有的请求处理完毕
 		listen.Close() //关闭tcp监听
@@ -38,7 +38,7 @@ func Start(addr string) {
 	for {
 		conn, err := listen.Accept()
 		if err != nil {
-			log.Fatal(err)
+			log.Error(err)
 		}
 		if isChanClose(quit) {
 			return
@@ -50,9 +50,9 @@ func Start(addr string) {
 func handle(ctx context.Context, conn net.Conn) {
 	defer func() {
 		if err := recover(); err != nil {
-			log.Fatal(err)
+			log.Error(err)
 		}
-		log.Printf("close Conn %s", conn.RemoteAddr().String())
+		log.Infof("close Remote Conn %s", conn.RemoteAddr())
 		conn.Close()
 	}()
 	user := NewUser(1111, conn, ctx)

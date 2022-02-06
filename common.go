@@ -1,8 +1,8 @@
 package main
 
 import (
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"log"
 	"os"
 	"sync"
 )
@@ -17,11 +17,11 @@ func Init() {
 
 	err := viper.ReadInConfig()
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 	err = viper.Unmarshal(&AppConfig)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 
 }
@@ -47,7 +47,7 @@ func HandlerFunc(f func() error) {
 	process.Add(1)
 	err := f()
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 	}
 	process.Done()
 }
@@ -57,7 +57,7 @@ func HandlerAsyncFunc(f func() error) {
 	go func() {
 		err := f()
 		if err != nil {
-			log.Fatal(err)
+			log.Error(err)
 		}
 		process.Done()
 	}()
