@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	log "github.com/sirupsen/logrus"
 	"net"
 )
 
@@ -15,13 +14,13 @@ type Session struct {
 	userData interface{} //用户的业务数据
 }
 
-func NewSession(uid uint64, conn net.Conn, ctx context.Context) *Session {
+func NewSession(uid uint64, conn net.Conn, ctx context.Context) (*Session, error) {
 	reader, err := NewReader(conn, 1024, 4, 2, ctx)
-	writer := NewWriter(conn, ctx)
 	if err != nil {
-		log.Error(err)
+		return nil, err
 	}
-	return &Session{Uid: uid, Reader: reader, Writer: writer, Die: make(chan struct{}, 2)}
+	writer := NewWriter(conn, ctx)
+	return &Session{Uid: uid, Reader: reader, Writer: writer, Die: make(chan struct{}, 2)}, nil
 }
 
 func (s *Session) SetUserData(userData interface{}) {

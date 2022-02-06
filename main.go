@@ -7,6 +7,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"sync/atomic"
 	"syscall"
 )
 
@@ -54,7 +55,15 @@ func handle(ctx context.Context, conn net.Conn) {
 		}
 		log.Infof("close Remote Conn %s", conn.RemoteAddr())
 		conn.Close()
+		atomic.AddInt64(&OnlineSession, -1)
 	}()
-	sess := NewSession(1111, conn, ctx)
+	num := atomic.AddUint64(&GlobalUid, 1)
+	sess, err := NewSession(num, conn, ctx)
+	if err != nil {
+		log.Errorf(" %s Init Session Failed", conn.RemoteAddr())
+		return
+	}
+	atomic.AddInt64(&OnlineSession, 1)
+	log.Infof("now user %d online  ", OnlineSession)
 	sess.Run()
 }

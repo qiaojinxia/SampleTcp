@@ -8,7 +8,9 @@ import (
 )
 
 var (
-	AppConfig = Config{}
+	OnlineSession int64
+	GlobalUid     uint64 = 1
+	AppConfig            = Config{}
 )
 
 func Init() {
