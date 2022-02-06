@@ -55,6 +55,6 @@ func handle(ctx context.Context, conn net.Conn) {
 		log.Infof("close Remote Conn %s", conn.RemoteAddr())
 		conn.Close()
 	}()
-	user := NewUser(1111, conn, ctx)
-	user.Run()
+	sess := NewSession(1111, conn, ctx)
+	sess.Run()
 }

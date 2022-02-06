@@ -12,10 +12,10 @@ type Session struct {
 	*Reader
 	*Writer
 	Die      chan struct{}
-	userData interface{}
+	userData interface{} //用户的业务数据
 }
 
-func NewUser(uid uint64, conn net.Conn, ctx context.Context) *Session {
+func NewSession(uid uint64, conn net.Conn, ctx context.Context) *Session {
 	reader, err := NewReader(conn, 1024, 4, 2, ctx)
 	writer := NewWriter(conn, ctx)
 	if err != nil {
