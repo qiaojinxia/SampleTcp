@@ -36,7 +36,7 @@ func NewReader(conn net.Conn, maxBufferSize, headerLen, lengthOffset int, ctx co
 	}, nil
 }
 
-func (r *Reader) Do() (err error) {
+func (r *Reader) Run() (err error) {
 	defer close(r.Message)
 	err = r.read()
 	if err != nil {

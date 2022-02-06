@@ -52,6 +52,17 @@ func HandlerFunc(f func() error) {
 	process.Done()
 }
 
+func HandlerAsyncFunc(f func() error) {
+	process.Add(1)
+	go func() {
+		err := f()
+		if err != nil {
+			log.Fatal(err)
+		}
+		process.Done()
+	}()
+}
+
 func isChanClose(ch chan os.Signal) bool {
 	select {
 	case _, received := <-ch:

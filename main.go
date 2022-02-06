@@ -55,22 +55,6 @@ func handle(ctx context.Context, conn net.Conn) {
 		log.Printf("close Conn %s", conn.RemoteAddr().String())
 		conn.Close()
 	}()
-	reader, err := NewReader(conn, 1024, 4, 2, ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-	go func() {
-		for {
-			select {
-			case msg := <-reader.Message:
-				fmt.Println("收到消息:", msg)
-			default:
-			}
-		}
-	}()
-	err = reader.Do()
-	if err != nil {
-		log.Fatal(err)
-	}
-
+	user := NewUser(1111, conn, ctx)
+	user.Run()
 }
